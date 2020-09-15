@@ -1,0 +1,12 @@
+.error-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.error-block__text{
+margin: 0 auto;
+}
+
+.error-block__img{
+  margin: 0 auto;
+}

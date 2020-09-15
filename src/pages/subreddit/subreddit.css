@@ -1,0 +1,52 @@
+.body-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 30px;
+  margin: 25px auto;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-style: normal;
+  width: 800px;
+  background: #ffffff;
+}
+
+.body-content_creator {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.body-content__title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 23px;
+  color: #000000;
+}
+
+.body-content__text {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 26px;
+  color: #000000;
+}
+
+.body-content__comment {
+  display: flex;
+  flex-direction: row;
+}
+
+.body-content__comment-text {
+  padding-left: 1em;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #7c787e;
+}
+/* #block div {
+  visibility: collapse;
+  transition-duration: .5ms;
+}
+
+#block input:nth-of-type(1).focus ~ div {
+  visibility: visible;
+  transition-duration: .2s;
+} */

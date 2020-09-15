@@ -1,0 +1,25 @@
+.block {
+  display: flex;
+  flex-direction: row;
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  padding: 15px 30px;
+  width: 800px;
+  margin: 0 auto;
+  background-color: white;
+}
+
+.block__name {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 23px;
+  color: #000000;
+  min-width: 50%;
+  max-width: 50%;
+}
+
+.block__img {
+  width: 60px;
+  height: 60px;
+  margin-right: 20px;
+}
