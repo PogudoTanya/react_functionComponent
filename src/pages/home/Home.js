@@ -1,83 +1,85 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withRedditApi } from "hooks/useRedditApi";
 import Header from "../../header/Header";
 import Subreddit from "../subreddit/subreddit";
 import AllSubreddits from "../allSubreddits/AllSubreddits";
 import NotFound from "../notFound/NotFound.js";
+import { Link } from "react-router-dom";
 import "../home/home.css";
 
-class Home extends React.Component {
-  state = {
-    reactSubreddit: null,
-    showAllSubreddits: false,
-    value: "",
-    chooseSubreddit: "react",
-  };
+function Home(props) {
+  const [reactSubreddit, setReactSubreddit] = useState(null);
+  const [showAllSubreddits, setShowAllSubreddits] = useState(false);
+  const [value, setValue] = useState("");
+  const [clickedSubreddit, setClickedSubreddit] = useState(undefined);
 
-  async componentDidMount() {
-    const { fetchReddit } = this.props;
+  useEffect(async () => {
+    const { fetchReddit } = props;
     const data = await fetchReddit("/r/react/hot").then((res) => res.json());
-    this.setState({ reactSubreddit: data });
-  }
+    setReactSubreddit(data);
+  }, []);
 
-  searchSubreddits = async (value) => {
-    const { fetchReddit } = this.props;
+  let searchSubreddits = async (value) => {
+    const { fetchReddit } = props;
     const data = await fetchReddit(
       `/subreddits/search?q=${value}`
     ).then((res) => res.json());
-    this.setState({ reactSubreddit: data, showAllSubreddits: true, value });
+    setReactSubreddit(data);
+    setShowAllSubreddits(true);
+    setValue(value);
   };
 
-  chooseSubreddit = async (value) => {
-    const { fetchReddit } = this.props;
-    const data = await fetchReddit(`/r/${value.display_name}/hot`).then((res) => res.json());
-    this.setState({ reactSubreddit: data, showAllSubreddits: false, clickedSubreddit: value});
-  };
-
-  render() {
-    const { reactSubreddit } = this.state;
-    if (!reactSubreddit) {
-      return <p>Loading...</p>;
-    }
-
-    return (
-      <section className="body">
-        <Header
-          value={this.state.value}
-          onClick={this.searchSubreddits}
-          showAllSubreddits={this.state.showAllSubreddits}
-          data={this.state.reactSubreddit}
-          clickedSubreddit={this.state.clickedSubreddit}
-        />
-        <div className="title-text">
-          {reactSubreddit.data.children.length !== 0
-            ? this.state.showAllSubreddits
-              ? "Communities and users"
-              : null
-            : null}
-        </div>
-
-        {this.state.reactSubreddit.data.children.length !== 0 ? (
-          reactSubreddit.data.children.map((child, index) =>
-            this.state.showAllSubreddits ? (
-              index < 10 ? (
-                <AllSubreddits
-                  data={child.data}
-                  chooseSubreddit={this.chooseSubreddit}
-                />
-              ) : null
-            ) : index < 10 ? (
-              <Subreddit data={child.data} />
-            ) : (
-              <null />
-            )
-          )
-        ) : (
-          <NotFound value={this.state.value} />
-        )}
-      </section>
+  let chooseSubreddit = async (value) => {
+    const { fetchReddit } = props;
+    const data = await fetchReddit(`/r/${value.display_name}/hot`).then((res) =>
+      res.json()
     );
+    setReactSubreddit(data);
+    setShowAllSubreddits(false);
+    setClickedSubreddit(value);
+  };
+
+  if (!reactSubreddit) {
+    return <p>Loading...</p>;
   }
+
+  return (
+    <section className="body">
+      <Header
+        value={value}
+        onClick={searchSubreddits}
+        showAllSubreddits={showAllSubreddits}
+        data={reactSubreddit}
+        clickedSubreddit={clickedSubreddit}
+      />
+      <div className="title-text">
+        {reactSubreddit.data.children.length !== 0
+          ? showAllSubreddits
+            ? "Communities and users"
+            : null
+          : null}
+      </div>
+
+      {reactSubreddit.data.children.length !== 0 ? (
+        reactSubreddit.data.children.map((child, index) =>
+          showAllSubreddits ? (
+            index < 10 ? (
+              <AllSubreddits
+                data={child.data}
+                chooseSubreddit={chooseSubreddit}
+              />
+            ) : null
+          ) : index < 10 ? (
+            <Subreddit data={child.data} />
+          ) : (
+            <null />
+          )
+        )
+      ) : (
+        <NotFound value={value} />
+      )}
+    </section>
+  );
 }
 
 export default withRedditApi(Home);
